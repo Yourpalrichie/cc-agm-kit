@@ -1,0 +1,70 @@
+<div class="agm-es">
+  <section class="es-pick">
+    <div class="es-filters">
+      <select name="folder">
+        {{#each folders}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}} ({{npcs}})</option>{{/each}}
+        <option value="" {{#if allSelected}}selected{{/if}}>All NPCs</option>
+      </select>
+      <input type="search" name="search" value="{{search}}" placeholder="Filter by name" autocomplete="off">
+    </div>
+    <ul class="es-list">
+      {{#each actors}}
+      <li class="es-actor{{#if inRoster}} picked{{/if}}" data-actor="{{id}}">
+        <img src="{{img}}" alt="" data-action="openSheet" data-tooltip="Open sheet">
+        <div class="es-main">
+          <div class="es-name">{{name}}</div>
+          <div class="es-sub">CR {{cr}} · HP {{hp}}{{#if hd}} · {{hd}}{{/if}}</div>
+        </div>
+        <a class="es-add" data-action="add" data-tooltip="Add to encounter"><i class="fa-solid fa-plus"></i>{{#if inRoster}} {{inRoster}}{{/if}}</a>
+      </li>
+      {{else}}
+      <li class="es-empty">No NPCs here. Pick another folder, or import statblocks with SBC.</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="es-side">
+    <h4>Encounter {{#if total}}<small>({{total}})</small>{{/if}} {{#if roster.length}}<a class="es-clear" data-action="clear" data-tooltip="Clear the list"><i class="fa-solid fa-eraser"></i></a>{{/if}}</h4>
+    <ul class="es-roster">
+      {{#each roster}}
+      <li class="es-actor" data-actor="{{id}}">
+        <img src="{{img}}" alt="">
+        <div class="es-main">
+          <div class="es-name">{{name}}</div>
+          <div class="es-sub">CR {{cr}}{{#if hd}} · {{hd}}{{/if}}</div>
+        </div>
+        <a data-action="bump" data-delta="-1"><i class="fa-solid fa-minus"></i></a>
+        <input type="number" min="0" max="50" value="{{count}}" data-count="{{id}}">
+        <a data-action="bump" data-delta="1"><i class="fa-solid fa-plus"></i></a>
+        <a data-action="remove" data-tooltip="Remove"><i class="fa-solid fa-xmark"></i></a>
+      </li>
+      {{else}}
+      <li class="es-empty">Click <i class="fa-solid fa-plus"></i> on an NPC, or drag Actors here.</li>
+      {{/each}}
+    </ul>
+
+    <div class="es-opts">
+      <label>HP
+        <select data-opt="hp">
+          <option value="roll" {{#if (eq opts.hp "roll")}}selected{{/if}}>Roll hit dice</option>
+          <option value="statblock" {{#if (eq opts.hp "statblock")}}selected{{/if}}>As statblock</option>
+        </select>
+      </label>
+      <label>Place
+        <select data-opt="place">
+          <option value="click" {{#if (eq opts.place "click")}}selected{{/if}}>Click on map</option>
+          <option value="center" {{#if (eq opts.place "center")}}selected{{/if}}>Centre of view</option>
+        </select>
+      </label>
+      <label class="es-check"><input type="checkbox" data-opt="hidden" {{checked opts.hidden}}> Hidden (reveal when ready)</label>
+      <label class="es-check"><input type="checkbox" data-opt="combat" {{checked opts.combat}}> Add to combat</label>
+      <label class="es-check"><input type="checkbox" data-opt="initiative" {{checked opts.initiative}} {{#unless opts.combat}}disabled{{/unless}}> Roll their initiative</label>
+      {{#if autoHP}}<p class="es-warn">PF1 auto-HP is on for some of these classes, so their HP stays as calculated.</p>{{/if}}
+    </div>
+
+    <p class="es-where">{{#if scene}}Scene: <b>{{scene}}</b>{{#if opts.combat}} · {{#if combat}}joins the {{combat}}{{else}}starts a new combat{{/if}}{{/if}}{{else}}No scene is being viewed.{{/if}}</p>
+    <button type="button" class="es-spawn" data-action="spawn" {{#unless total}}disabled{{/unless}} {{#if busy}}disabled{{/if}}>
+      <i class="fa-solid fa-dragon"></i> Spawn {{#if total}}{{total}} {{/if}}NPC{{#unless (eq total 1)}}s{{/unless}}
+    </button>
+  </section>
+</div>

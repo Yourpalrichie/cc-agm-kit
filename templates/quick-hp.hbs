@@ -1,0 +1,39 @@
+<div class="agm-qhp">
+  {{#if rows.length}}
+  <ul class="qhp-rows">
+    {{#each rows}}
+    <li class="qhp-row{{#unless included}} excluded{{/unless}}{{#if down}} down{{/if}}" data-token="{{id}}">
+      <a class="qhp-check" data-action="toggleTarget" data-tooltip="{{#if included}}Included: click to skip{{else}}Skipped: click to include{{/if}}"><i class="fa-regular {{#if included}}fa-square-check{{else}}fa-square{{/if}}"></i></a>
+      <img src="{{img}}" alt="">
+      <div class="qhp-main">
+        <div class="qhp-name">{{name}}</div>
+        <div class="qhp-bar"><div class="qhp-fill{{#if low}} low{{/if}}" style="width:{{pct}}%"></div></div>
+        <div class="qhp-nums">HP <b>{{hp}}</b>/{{max}}{{#if temp}} · temp {{temp}}{{/if}}{{#if nonlethal}} · NL {{nonlethal}}{{/if}}</div>
+        {{#if statuses.length}}<div class="qhp-statuses">{{#each statuses}}<img src="{{img}}" data-action="removeCondition" data-id="{{id}}" data-tooltip="{{name}}: click to remove" alt="{{name}}">{{/each}}</div>{{/if}}
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+  {{else}}
+  <p class="qhp-empty">Select tokens on the map (shift-click for several).</p>
+  {{/if}}
+
+  <div class="qhp-amount">
+    <input type="text" name="amount" value="{{amount}}" placeholder="Amount or dice, e.g. 12 or 2d6+3" autocomplete="off">
+  </div>
+  <div class="qhp-buttons">
+    <button type="button" data-action="apply" data-mode="damage" data-tooltip="Enter"><i class="fa-solid fa-burst"></i> Damage</button>
+    <button type="button" data-action="apply" data-mode="half"><i class="fa-solid fa-shield-halved"></i> Half</button>
+    <button type="button" data-action="apply" data-mode="heal" data-tooltip="Shift+Enter"><i class="fa-solid fa-heart"></i> Heal</button>
+    <button type="button" data-action="apply" data-mode="nonlethal"><i class="fa-solid fa-hand-fist"></i> Nonlethal</button>
+    <button type="button" data-action="apply" data-mode="temp"><i class="fa-solid fa-shield-heart"></i> Temp HP</button>
+    <button type="button" data-action="undo" {{#unless undo}}disabled{{/unless}} data-tooltip="{{#if undo}}Undo {{undo.label}}{{else}}Nothing to undo{{/if}}"><i class="fa-solid fa-rotate-left"></i> Undo</button>
+  </div>
+
+  <h4>Conditions <small>(click to toggle on the ticked tokens)</small></h4>
+  <div class="qhp-conds">
+    {{#each conds}}
+    <a class="qhp-cond {{state}}" data-action="condition" data-id="{{id}}" data-tooltip="{{name}}"><img src="{{img}}" alt="{{name}}"></a>
+    {{/each}}
+  </div>
+</div>

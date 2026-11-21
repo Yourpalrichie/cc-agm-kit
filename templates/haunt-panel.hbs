@@ -1,0 +1,25 @@
+<div class="agm-panel">
+  <p class="agm-status">Hauntomatic is <strong>{{#if enabled}}ON{{else}}OFF{{/if}}</strong>
+    <button type="button" data-action="toggleEnabled">{{#if enabled}}Turn off{{else}}Turn on{{/if}}</button></p>
+  {{#if haunts.length}}
+  <table>
+    <thead><tr><th>Haunt</th><th>State</th><th>HP</th><th></th></tr></thead>
+    <tbody>
+    {{#each haunts}}
+      <tr class="state-{{state}}{{#if disabled}} disabled{{/if}}" data-uuid="{{uuid}}">
+        <td><a data-action="configure" title="Configure">{{name}}</a> <span class="agm-sub">CR {{cr}} · DC {{noticeDC}}{{#if disabled}} · off{{/if}}</span></td>
+        <td>{{stateLabel}}</td>
+        <td>{{hp}}/{{hpMax}}</td>
+        <td class="agm-actions">
+          <a data-action="haunt" data-op="manifest" title="Manifest now"><i class="fa-solid fa-bolt"></i></a>
+          <a data-action="haunt" data-op="positive" title="Positive energy"><i class="fa-solid fa-sun"></i></a>
+          <a data-action="haunt" data-op="neutralize" title="Neutralized"><i class="fa-solid fa-ban"></i></a>
+          <a data-action="haunt" data-op="destroy" title="Destroyed"><i class="fa-solid fa-skull"></i></a>
+          <a data-action="haunt" data-op="rearm" title="Re-arm"><i class="fa-solid fa-rotate"></i></a>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  {{else}}<p><em>No haunts on this scene. Draw a Region and add a Haunt behavior.</em></p>{{/if}}
+</div>

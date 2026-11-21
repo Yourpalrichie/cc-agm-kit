@@ -1,0 +1,45 @@
+{
+  "id": "cc-agm-kit",
+  "title": "Carrion Crown Assistant GM Kit",
+  "description": "Assistant GM tools for a PF1 Carrion Crown game. v0.1: Hauntomatic, sanity tracker, quick HP and conditions, encounter spawner.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351",
+    "maximum": "13"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf1",
+        "type": "system",
+        "compatibility": {
+          "minimum": "11.11"
+        }
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "Richie"
+    }
+  ],
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/agm.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "RegionBehavior": {
+      "haunt": {}
+    }
+  }
+}

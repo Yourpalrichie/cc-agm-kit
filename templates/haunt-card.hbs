@@ -1,0 +1,20 @@
+<div class="agm-haunt-card">
+  <header><i class="fa-solid fa-ghost"></i> <strong>{{name}}</strong> <span class="agm-tag">CR {{cr}}</span>{{#if persistent}} <span class="agm-tag">Persistent</span>{{/if}}</header>
+  <p class="agm-meta">CL {{casterLevel}} · Notice DC {{noticeDC}} · Acts at init {{initiative}} (surprise round) · HP {{hp}}/{{hpMax}}</p>
+  <h4>Noticed (blind Perception)</h4>
+  {{#if noticed.length}}
+  <ul class="agm-noticed">
+    {{#each noticed}}<li class="{{#if success}}yes{{else}}no{{/if}}">{{#if success}}<i class="fa-solid fa-eye"></i>{{else}}<i class="fa-solid fa-eye-slash"></i>{{/if}} {{name}} {{#if total includeZero=true}}({{total}}){{else}}(no roll){{/if}}</li>{{/each}}
+  </ul>
+  {{else}}<p><em>No PCs in the area.</em></p>{{/if}}
+  {{#if effect}}<h4>Effect</h4><div class="agm-rich">{{{effect}}}</div>{{/if}}
+  {{#if destruction}}<h4>Destruction</h4><div class="agm-rich">{{{destruction}}}</div>{{/if}}
+  {{#if weakness}}<p><strong>Weaknesses:</strong> {{weakness}}</p>{{/if}}
+  {{#if resetText}}<p><strong>Reset:</strong> {{resetText}}</p>{{/if}}
+  <div class="agm-buttons">
+    <button type="button" data-agm-action="positive"><i class="fa-solid fa-sun"></i> Positive energy</button>
+    <button type="button" data-agm-action="neutralize"><i class="fa-solid fa-ban"></i> Neutralized</button>
+    <button type="button" data-agm-action="destroy"><i class="fa-solid fa-skull"></i> Destroyed</button>
+    <button type="button" data-agm-action="rearm"><i class="fa-solid fa-rotate"></i> Re-arm</button>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+# editors
+.vscode/
+.idea/
+*.swp
+# release zips (built for GitHub releases, not tracked)
+*.zip

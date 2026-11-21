@@ -1,0 +1,93 @@
+{
+  "AGM": {
+    "Haunt": "Haunt",
+    "Settings": {
+      "enabled": {
+        "name": "Hauntomatic enabled",
+        "hint": "When off, no haunt behaviors trigger. Also toggled from the token scene controls."
+      }
+    },
+    "Controls": {
+      "toggle": "Hauntomatic on/off",
+      "panel": "Haunt list",
+      "sanity": "Sanity tracker",
+      "quickHP": "Quick HP & conditions (Shift+H)",
+      "encounter": "Encounter spawner"
+    },
+    "State": {
+      "armed": "Armed",
+      "triggered": "Triggered",
+      "neutralized": "Neutralized",
+      "destroyed": "Destroyed"
+    },
+    "Trigger": {
+      "proximity": "Proximity",
+      "touch": "Touch",
+      "other": "Other"
+    }
+  },
+  "BEHAVIOR": {
+    "TYPES": {
+      "cc-agm-kit": {
+        "haunt": {
+          "FIELDS": {
+            "name": {
+              "label": "Haunt name"
+            },
+            "cr": {
+              "label": "CR"
+            },
+            "casterLevel": {
+              "label": "Caster level"
+            },
+            "noticeDC": {
+              "label": "Notice DC (Perception)"
+            },
+            "hp": {
+              "label": "Current HP"
+            },
+            "hpMax": {
+              "label": "Max HP"
+            },
+            "persistent": {
+              "label": "Persistent"
+            },
+            "slow": {
+              "label": "Slow (acts at initiative 0)"
+            },
+            "trigger": {
+              "label": "Trigger"
+            },
+            "effect": {
+              "label": "Effect"
+            },
+            "destruction": {
+              "label": "Destruction"
+            },
+            "weakness": {
+              "label": "Weaknesses"
+            },
+            "resetText": {
+              "label": "Reset (as written)"
+            },
+            "resetSeconds": {
+              "label": "Reset after (seconds of world time)",
+              "hint": "0 = manual re-arm only. 1 hour = 3600, 1 day = 86400."
+            },
+            "state": {
+              "label": "State"
+            },
+            "neutralizedAt": {
+              "label": "Neutralized at (world time)",
+              "hint": "Set automatically."
+            },
+            "stingerUuid": {
+              "label": "Stinger sound",
+              "hint": "Optional. Drag a playlist sound here to play it when the haunt triggers."
+            }
+          }
+        }
+      }
+    }
+  }
+}
