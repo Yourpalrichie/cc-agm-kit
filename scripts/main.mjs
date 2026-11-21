@@ -4,6 +4,7 @@ import { onRenderChatMessageHTML } from "./haunt-card.mjs";
 import { HauntPanel } from "./haunt-panel.mjs";
 import { QuickHPApp } from "./quick-hp.mjs";
 import { EncounterSpawnerApp, spawnEncounter } from "./encounter-spawner.mjs";
+import { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit } from "./loot-divider.mjs";
 import { SanityTrackerApp, syncBuffs, stats, getData } from "./sanity/tracker.mjs";
 
 Hooks.once("init", () => {
@@ -33,6 +34,15 @@ Hooks.once("init", () => {
     onChange: () => SanityTrackerApp.instance.rendered && SanityTrackerApp.instance.render()
   });
 
+  game.settings.register(MODULE_ID, "lootPartySize", {
+    name: "Loot divider: number of players",
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 4,
+    onChange: () => LootDividerApp.instance.rendered && LootDividerApp.instance.render()
+  });
+
   game.keybindings.register(MODULE_ID, "quickHP", {
     name: "Open Quick HP & Conditions",
     editable: [{ key: "KeyH", modifiers: ["Shift"] }],
@@ -46,6 +56,8 @@ Hooks.once("init", () => {
     openQuickHP: () => QuickHPApp.open(),
     openEncounterSpawner: () => EncounterSpawnerApp.open(),
     spawnEncounter,
+    openLootDivider: () => LootDividerApp.open(),
+    loot: { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit },
     sanity: { SanityTrackerApp, syncBuffs, stats, getData }
   };
 });
@@ -96,6 +108,14 @@ Hooks.on("getSceneControlButtons", controls => {
     icon: "fa-solid fa-dragon",
     button: true,
     onChange: () => EncounterSpawnerApp.open()
+  };
+  tokens.tools.agmLoot = {
+    name: "agmLoot",
+    order: 105,
+    title: "AGM.Controls.loot",
+    icon: "fa-solid fa-sack-dollar",
+    button: true,
+    onChange: () => LootDividerApp.open()
   };
 });
 

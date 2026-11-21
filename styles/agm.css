@@ -102,3 +102,39 @@
 .agm-es .es-where { margin: 0; font-size: .85em; opacity: .85; }
 .agm-es .es-spawn { line-height: 32px; font-size: 1.1em; }
 .agm-spawn-card ul { margin: 4px 0 0; padding-left: 16px; }
+
+/* Loot divider */
+.agm-loot-divider .window-content { padding: 6px; }
+.agm-ld { display: flex; flex-direction: column; gap: 10px; height: 100%; overflow-y: auto; }
+.agm-ld section { display: flex; flex-direction: column; gap: 5px; }
+.agm-ld h4 { font-size: 1em; margin: 0; border-bottom: 1px solid rgba(127,127,127,.4); display: flex; gap: 6px; align-items: baseline; }
+.agm-ld h4 small { font-weight: normal; opacity: .7; }
+.agm-ld h4 .ld-right { margin-left: auto; }
+.agm-ld .ld-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.agm-ld .ld-drop { min-height: 60px; border: 1px dashed rgba(127,127,127,.45); border-radius: 5px; padding: 3px; }
+.agm-ld .ld-row { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border: 1px solid rgba(127,127,127,.3); border-radius: 5px; }
+.agm-ld .ld-row.given { opacity: .5; }
+.agm-ld .ld-row.given .ld-name { text-decoration: line-through; }
+.agm-ld .ld-row > img { width: 28px; height: 28px; object-fit: contain; border: none; flex: none; cursor: pointer; }
+.agm-ld .ld-main { flex: 1; min-width: 0; }
+.agm-ld .ld-name { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agm-ld .ld-sub, .agm-loot-card .ld-sub { font-size: .8em; opacity: .75; }
+.agm-ld .ld-sell { flex: none; font-variant-numeric: tabular-nums; }
+.agm-ld .ld-check { flex: none; }
+.agm-ld .ld-empty { opacity: .65; font-style: italic; margin: 0; padding: 4px; }
+.agm-ld .ld-hint { margin: 0; font-size: .8em; opacity: .7; }
+.agm-ld .ld-coins { margin: 0; font-size: 1.1em; font-weight: bold; }
+.agm-ld .ld-add { display: flex; align-items: center; gap: 4px; font-size: .9em; }
+.agm-ld .ld-add input { width: 52px; height: 24px; text-align: center; }
+.agm-ld .ld-add button { flex: none; width: 30px; line-height: 22px; margin: 0; }
+.agm-ld .ld-buttons { display: flex; gap: 4px; }
+.agm-ld .ld-buttons button { margin: 0; line-height: 28px; }
+.agm-ld .ld-buttons .ld-big { flex: 2; }
+.agm-ld .ld-split-grid { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: center; }
+.agm-ld .ld-split-grid label { display: flex; align-items: center; gap: 4px; }
+.agm-ld .ld-split-grid input { width: 46px; height: 24px; text-align: center; }
+.agm-ld .ld-split-grid .ld-sub { grid-column: span 2; }
+.agm-loot-card h3 { margin: 0 0 4px; font-size: 1.15em; border: none; }
+.agm-loot-card h4 { margin: 6px 0 2px; font-size: 1em; font-weight: bold; border: none; }
+.agm-loot-card ul { margin: 2px 0; padding-left: 16px; }
+.agm-loot-card p { margin: 2px 0; }

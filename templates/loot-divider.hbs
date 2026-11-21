@@ -1,0 +1,77 @@
+<div class="agm-ld ld-scroll">
+  <section class="ld-room">
+    <h4>Room cleared <small>{{#if scene}}{{scene}}{{else}}no scene viewed{{/if}}</small></h4>
+    {{#if room.length}}
+    <ul class="ld-list">
+      {{#each room}}
+      <li class="ld-row" data-token="{{id}}">
+        <img src="{{img}}" alt="" data-action="panToken" data-tooltip="Pan to token">
+        <div class="ld-main"><div class="ld-name">{{name}}</div><div class="ld-sub">{{items}} item(s) · {{coins}}</div></div>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p class="ld-empty">No defeated, unswept NPCs on this scene. (Defeated = 0 HP or less, or the dead status.)</p>
+    {{/if}}
+    <div class="ld-buttons">
+      <button type="button" class="ld-big" data-action="roomCleared" {{#unless room.length}}disabled{{/unless}} {{#if busy}}disabled{{/if}}>
+        <i class="fa-solid fa-broom"></i> Room cleared: sweep {{room.length}} into the stash
+      </button>
+      <button type="button" data-action="sweepSelected" {{#unless selected}}disabled{{/unless}} data-tooltip="Sweep selected NPC tokens even if they aren't defeated (chests, surrendered foes)">
+        <i class="fa-solid fa-hand-pointer"></i> Sweep selected ({{selected}})
+      </button>
+    </div>
+  </section>
+
+  <section class="ld-stash">
+    <h4>Party Stash
+      {{#if stash}}<a class="ld-right" data-action="openStash" data-tooltip="Open the stash sheet"><i class="fa-solid fa-up-right-from-square"></i></a>{{/if}}
+    </h4>
+    {{#if stash}}
+    <p class="ld-coins"><i class="fa-solid fa-coins"></i> {{coins}}</p>
+    <div class="ld-add">
+      <span>Add coins:</span>
+      <input type="number" name="add-pp" min="0" placeholder="pp">
+      <input type="number" name="add-gp" min="0" placeholder="gp">
+      <input type="number" name="add-sp" min="0" placeholder="sp">
+      <input type="number" name="add-cp" min="0" placeholder="cp">
+      <button type="button" data-action="addCoins"><i class="fa-solid fa-plus"></i></button>
+    </div>
+    <ul class="ld-list ld-drop">
+      {{#each items}}
+      <li class="ld-row{{#if given}} given{{/if}}" data-item="{{id}}">
+        <a class="ld-check" data-action="toggleGiven" data-tooltip="{{#if given}}Handed out: click to put back in the split{{else}}Click when handed out to a player{{/if}}"><i class="fa-regular {{#if given}}fa-square-check{{else}}fa-square{{/if}}"></i></a>
+        <img src="{{img}}" alt="" data-action="openItem">
+        <div class="ld-main">
+          <div class="ld-name">{{name}}{{#if (gt qty 1)}} ×{{qty}}{{/if}}</div>
+          <div class="ld-sub">{{#if unidName}}Players see: {{unidName}} · {{/if}}{{#if from}}from {{from}}{{/if}}</div>
+        </div>
+        <div class="ld-sell">{{sell}} gp</div>
+      </li>
+      {{else}}
+      <li class="ld-empty">No items yet. Drag items here to add them.</li>
+      {{/each}}
+    </ul>
+    <p class="ld-hint">Drop items from the sidebar, a compendium or a sheet onto the list to add them. Values are half-price sell values (trade goods at full price).</p>
+    {{else}}
+    <p class="ld-empty">No Party Stash yet. It's created on the first sweep, or now:</p>
+    <button type="button" data-action="createStash"><i class="fa-solid fa-box-open"></i> Create Party Stash</button>
+    {{/if}}
+  </section>
+
+  {{#if stash}}
+  <section class="ld-split">
+    <h4>Split</h4>
+    <div class="ld-split-grid">
+      <label>Players <input type="number" name="partySize" value="{{partySize}}" min="1" max="12"></label>
+      <div>Each share: <strong>{{share}}</strong></div>
+      {{#if leftover}}<div class="ld-sub">Stays in the stash: {{leftover}}</div>{{/if}}
+      <div class="ld-sub">{{openCount}} item(s) left to divide, worth {{itemsSell}} gp if sold</div>
+    </div>
+    <div class="ld-buttons">
+      <button type="button" class="ld-big" data-action="postShares"><i class="fa-solid fa-comment-dollar"></i> Post shares to chat</button>
+      <button type="button" data-action="payOut" {{#unless canPay}}disabled{{/unless}} data-tooltip="Take the shares out of the stash once players have copied them"><i class="fa-solid fa-hand-holding-dollar"></i> Pay out coins</button>
+    </div>
+  </section>
+  {{/if}}
+</div>

@@ -12,7 +12,8 @@
       "panel": "Haunt list",
       "sanity": "Sanity tracker",
       "quickHP": "Quick HP & conditions (Shift+H)",
-      "encounter": "Encounter spawner"
+      "encounter": "Encounter spawner",
+      "loot": "Loot divider"
     },
     "State": {
       "armed": "Armed",
