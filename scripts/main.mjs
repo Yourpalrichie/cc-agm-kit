@@ -6,7 +6,7 @@ import { NewHauntApp, parseHauntStatBlock } from "./haunt-new.mjs";
 import { QuickHPApp } from "./quick-hp.mjs";
 import { EncounterSpawnerApp, spawnEncounter } from "./encounter-spawner.mjs";
 import { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit } from "./loot-divider.mjs";
-import { SanityTrackerApp, syncBuffs, stats, getData } from "./sanity/tracker.mjs";
+import { SanityTrackerApp, syncBuffs, stats, getData, checkOnsets } from "./sanity/tracker.mjs";
 
 Hooks.once("init", () => {
   CONFIG.RegionBehavior.dataModels[HAUNT_TYPE] = HauntBehaviorType;
@@ -158,6 +158,7 @@ for ( const hook of ["createRegionBehavior", "updateRegionBehavior", "deleteRegi
 /* Reset neutralized haunts once their reset time has passed. Only the executor client writes. */
 Hooks.on("updateWorldTime", async worldTime => {
   if ( !isExecutor() ) return;
+  await checkOnsets(worldTime).catch(err => console.error("cc-agm-kit | madness onset check failed", err));
   for ( const scene of game.scenes ) {
     for ( const behavior of hauntsInScene(scene) ) {
       if ( behavior.system.isDueToReset(worldTime) ) {
