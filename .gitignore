@@ -6,3 +6,5 @@
 *.swp
 # release zips (built for GitHub releases, not tracked)
 *.zip
+# release build output (.github/build-release.sh)
+dist/
