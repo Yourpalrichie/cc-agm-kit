@@ -6,6 +6,7 @@ import { NewHauntApp, parseHauntStatBlock } from "./haunt-new.mjs";
 import { QuickHPApp } from "./quick-hp.mjs";
 import { EncounterSpawnerApp, spawnEncounter } from "./encounter-spawner.mjs";
 import { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit } from "./loot-divider.mjs";
+import { openSnapshotImport, importSnapshot, listSnapshots } from "./snapshot-import.mjs";
 import { SanityTrackerApp, syncBuffs, stats, getData, checkOnsets } from "./sanity/tracker.mjs";
 
 Hooks.once("init", () => {
@@ -60,7 +61,8 @@ Hooks.once("init", () => {
     spawnEncounter,
     openLootDivider: () => LootDividerApp.open(),
     loot: { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit },
-    sanity: { SanityTrackerApp, syncBuffs, stats, getData }
+    sanity: { SanityTrackerApp, syncBuffs, stats, getData },
+    openSnapshotImport, snapshots: { importSnapshot, listSnapshots }
   };
 });
 
@@ -143,6 +145,14 @@ Hooks.on("getSceneControlButtons", controls => {
         icon: "fa-solid fa-sack-dollar",
         button: true,
         onChange: () => LootDividerApp.open()
+      },
+      agmSnapshots: {
+        name: "agmSnapshots",
+        order: 9,
+        title: "AGM.Controls.snapshots",
+        icon: "fa-solid fa-camera",
+        button: true,
+        onChange: () => openSnapshotImport()
       }
     }
   };
