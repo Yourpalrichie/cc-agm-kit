@@ -1,6 +1,7 @@
 <div class="agm-panel">
   <p class="agm-status">Hauntomatic is <strong>{{#if enabled}}ON{{else}}OFF{{/if}}</strong>
-    <button type="button" data-action="toggleEnabled">{{#if enabled}}Turn off{{else}}Turn on{{/if}}</button></p>
+    <button type="button" data-action="toggleEnabled">{{#if enabled}}Turn off{{else}}Turn on{{/if}}</button>
+    <button type="button" data-action="newHaunt"><i class="fa-solid fa-plus"></i> New haunt</button></p>
   {{#if haunts.length}}
   <table>
     <thead><tr><th>Haunt</th><th>State</th><th>HP</th><th></th></tr></thead>
@@ -21,5 +22,5 @@
     {{/each}}
     </tbody>
   </table>
-  {{else}}<p><em>No haunts on this scene. Draw a Region and add a Haunt behavior.</em></p>{{/if}}
+  {{else}}<p><em>No haunts on this scene. Click New haunt to enter a stat block and draw its area.</em></p>{{/if}}
 </div>

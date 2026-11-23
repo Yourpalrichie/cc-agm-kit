@@ -15,7 +15,8 @@
 .agm-panel tr.state-destroyed td { opacity: .4; text-decoration: line-through; }
 .agm-panel tr.state-triggered td:nth-child(2) { color: #c0392b; font-weight: bold; }
 .agm-panel .agm-status { display: flex; align-items: center; gap: 8px; }
-.agm-panel .agm-status button { width: auto; margin-left: auto; }
+.agm-panel .agm-status button { width: auto; flex: none; }
+.agm-panel .agm-status button:first-of-type { margin-left: auto; }
 
 /* Sanity tracker (ported from the macro) */
 .sanity-tracker .window-content{padding:6px;overflow-y:auto}
@@ -157,3 +158,20 @@
 .agm-apply-damage .agm-apply-one { flex: none; width: auto; min-width: 7em; line-height: 1.8em; margin: 0; font-family: var(--font-body, sans-serif); font-variant: normal; text-transform: none; font-size: .8em; }
 .agm-apply-damage .agm-ad-summary { font-size: .85em; opacity: .85; margin: -.1em 0 .3em; }
 .agm-apply-damage .form-footer { position: sticky; bottom: -1rem; background: var(--color-cool-5, #1e1e24); padding-bottom: .5rem; }
+
+/* New haunt */
+.agm-new-haunt .window-content { overflow-y: auto; max-height: 85vh; }
+.agm-nh { display: flex; flex-direction: column; gap: 8px; }
+.agm-nh .nh-paste { border: 1px dashed rgba(127,127,127,.45); border-radius: 5px; padding: 4px 6px; }
+.agm-nh .nh-paste summary { cursor: pointer; font-weight: bold; }
+.agm-nh .nh-paste textarea { width: 100%; margin: 4px 0; font-family: var(--font-monospace, monospace); font-size: .85em; }
+.agm-nh .nh-hint { margin: 2px 0 0; font-size: .85em; opacity: .8; }
+.agm-nh .nh-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px 8px; align-items: end; }
+.agm-nh .nh-grid label { display: flex; flex-direction: column; gap: 2px; font-size: .85em; }
+.agm-nh .nh-grid .nh-wide { grid-column: span 2; }
+.agm-nh .nh-grid .nh-check { flex-direction: row; align-items: center; }
+.agm-nh .nh-block { display: flex; flex-direction: column; gap: 2px; font-size: .85em; }
+.agm-nh .nh-block textarea { width: 100%; }
+.agm-nh .nh-footer { display: flex; gap: 8px; align-items: center; }
+.agm-nh .nh-footer label { display: flex; align-items: center; gap: 4px; flex: none; }
+.agm-nh .nh-footer button { flex: 1; margin: 0; line-height: 30px; }

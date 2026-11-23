@@ -1,0 +1,30 @@
+<div class="agm-nh">
+  <details class="nh-paste" {{#if found}}open{{else}}{{#unless data.name}}open{{/unless}}{{/if}}>
+    <summary><i class="fa-solid fa-paste"></i> Paste a stat block</summary>
+    <textarea name="statBlock" rows="7" placeholder="PHANTOM FIRE CR 3&#10;XP 800&#10;CE persistent haunt (10 ft. by 15 ft. room)&#10;Caster Level 3rd&#10;Notice Perception DC 20 (to hear the screams)&#10;hp 13; Weakness slow; Trigger proximity; Reset 1 day&#10;Effect ...&#10;Destruction ...">{{data.statBlock}}</textarea>
+    <button type="button" data-action="parse"><i class="fa-solid fa-wand-magic-sparkles"></i> Fill in from stat block</button>
+    {{#if found}}<p class="nh-hint">Found: {{#each found}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}. Check below before drawing.</p>{{/if}}
+  </details>
+
+  <div class="nh-grid">
+    <label class="nh-wide">Name <input type="text" name="name" value="{{data.name}}" placeholder="Haunt name"></label>
+    <label>CR <input type="number" name="cr" value="{{data.cr}}" min="0" step="any"></label>
+    <label>Caster level <input type="number" name="casterLevel" value="{{data.casterLevel}}" min="0" step="1"></label>
+    <label>Notice DC <input type="number" name="noticeDC" value="{{data.noticeDC}}" min="0" step="1"></label>
+    <label>HP <input type="number" name="hpMax" value="{{data.hpMax}}" min="0" step="1"></label>
+    <label class="nh-wide">Notice text <input type="text" name="noticeText" value="{{data.noticeText}}" placeholder="to hear the screams"></label>
+    <label>Trigger <select name="trigger">{{selectOptions triggers selected=data.trigger}}</select></label>
+    <label class="nh-check"><input type="checkbox" name="persistent" {{checked data.persistent}}> Persistent</label>
+    <label class="nh-check"><input type="checkbox" name="slow" {{checked data.slow}}> Slow (init 0)</label>
+    <label class="nh-wide">Weaknesses <input type="text" name="weakness" value="{{data.weakness}}"></label>
+    <label class="nh-wide">Reset (as written) <input type="text" name="resetText" value="{{data.resetText}}" placeholder="1 day"></label>
+    <label>Reset after (sec) <input type="number" name="resetSeconds" value="{{data.resetSeconds}}" min="0" step="1" title="0 = manual re-arm only. 1 hour = 3600, 1 day = 86400."></label>
+  </div>
+  <label class="nh-block">Effect <textarea name="effect" rows="5">{{data.effect}}</textarea></label>
+  <label class="nh-block">Destruction <textarea name="destruction" rows="3">{{data.destruction}}</textarea></label>
+
+  <footer class="nh-footer">
+    <label>Shape <select name="shape">{{selectOptions shapes selected=data.shape}}</select></label>
+    <button type="submit"><i class="fa-solid fa-draw-polygon"></i> Draw haunt area on {{scene}}</button>
+  </footer>
+</div>

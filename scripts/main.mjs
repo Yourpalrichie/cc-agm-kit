@@ -2,6 +2,7 @@ import { MODULE_ID, HAUNT_TYPE, isExecutor, hauntomaticEnabled } from "./util.mj
 import { HauntBehaviorType, hauntsInScene } from "./haunt-behavior.mjs";
 import { onRenderChatMessageHTML } from "./haunt-card.mjs";
 import { HauntPanel } from "./haunt-panel.mjs";
+import { NewHauntApp, parseHauntStatBlock } from "./haunt-new.mjs";
 import { QuickHPApp } from "./quick-hp.mjs";
 import { EncounterSpawnerApp, spawnEncounter } from "./encounter-spawner.mjs";
 import { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit } from "./loot-divider.mjs";
@@ -52,6 +53,7 @@ Hooks.once("init", () => {
 
   game.modules.get(MODULE_ID).api = {
     HauntPanel, hauntsInScene,
+    openNewHaunt: () => NewHauntApp.open(), parseHauntStatBlock,
     openSanityTracker: () => SanityTrackerApp.open(),
     openQuickHP: () => QuickHPApp.open(),
     openEncounterSpawner: () => EncounterSpawnerApp.open(),
@@ -62,60 +64,87 @@ Hooks.once("init", () => {
   };
 });
 
-/* Scene controls: on/off toggle and the haunt list, under Token controls. GM and Assistant GM only. */
+/*
+ * Our own control group in the far-left column. Switching to it leaves the
+ * Token layer active (we don't activate another layer), so selected tokens stay
+ * selected for Quick HP, loot, etc. A control group needs one non-button tool to
+ * be its active tool, so it gets a plain Select tool like the Token group's.
+ */
 Hooks.on("getSceneControlButtons", controls => {
-  const tokens = controls.tokens;
-  if ( !tokens || !game.user.isGM ) return;
-  tokens.tools.agmHauntomatic = {
-    name: "agmHauntomatic",
+  if ( !game.user.isGM ) return;
+  controls.carrionCrown = {
+    name: "carrionCrown",
     order: 100,
-    title: "AGM.Controls.toggle",
-    icon: "fa-solid fa-ghost",
-    toggle: true,
-    active: hauntomaticEnabled(),
-    onChange: (event, active) => {
-      if ( active !== hauntomaticEnabled() ) game.settings.set(MODULE_ID, "hauntomaticEnabled", active);
+    title: "AGM.Controls.group",
+    icon: "fa-solid fa-crown",
+    activeTool: "select",
+    tools: {
+      select: {
+        name: "select",
+        order: 1,
+        title: "CONTROLS.BasicSelect",
+        icon: "fa-solid fa-expand"
+      },
+      agmHauntomatic: {
+        name: "agmHauntomatic",
+        order: 2,
+        title: "AGM.Controls.toggle",
+        icon: "fa-solid fa-ghost",
+        toggle: true,
+        active: hauntomaticEnabled(),
+        onChange: (event, active) => {
+          if ( active !== hauntomaticEnabled() ) game.settings.set(MODULE_ID, "hauntomaticEnabled", active);
+        }
+      },
+      agmNewHaunt: {
+        name: "agmNewHaunt",
+        order: 3,
+        title: "AGM.Controls.newHaunt",
+        icon: "fa-solid fa-scroll",
+        button: true,
+        onChange: () => NewHauntApp.open()
+      },
+      agmHauntPanel: {
+        name: "agmHauntPanel",
+        order: 4,
+        title: "AGM.Controls.panel",
+        icon: "fa-solid fa-list-ul",
+        button: true,
+        onChange: () => HauntPanel.instance.render({ force: true })
+      },
+      agmSanity: {
+        name: "agmSanity",
+        order: 5,
+        title: "AGM.Controls.sanity",
+        icon: "fa-solid fa-brain",
+        button: true,
+        onChange: () => SanityTrackerApp.open()
+      },
+      agmQuickHP: {
+        name: "agmQuickHP",
+        order: 6,
+        title: "AGM.Controls.quickHP",
+        icon: "fa-solid fa-heart-pulse",
+        button: true,
+        onChange: () => QuickHPApp.open()
+      },
+      agmEncounter: {
+        name: "agmEncounter",
+        order: 7,
+        title: "AGM.Controls.encounter",
+        icon: "fa-solid fa-dragon",
+        button: true,
+        onChange: () => EncounterSpawnerApp.open()
+      },
+      agmLoot: {
+        name: "agmLoot",
+        order: 8,
+        title: "AGM.Controls.loot",
+        icon: "fa-solid fa-sack-dollar",
+        button: true,
+        onChange: () => LootDividerApp.open()
+      }
     }
-  };
-  tokens.tools.agmHauntPanel = {
-    name: "agmHauntPanel",
-    order: 101,
-    title: "AGM.Controls.panel",
-    icon: "fa-solid fa-list-ul",
-    button: true,
-    onChange: () => HauntPanel.instance.render({ force: true })
-  };
-  tokens.tools.agmSanity = {
-    name: "agmSanity",
-    order: 102,
-    title: "AGM.Controls.sanity",
-    icon: "fa-solid fa-brain",
-    button: true,
-    onChange: () => SanityTrackerApp.open()
-  };
-  tokens.tools.agmQuickHP = {
-    name: "agmQuickHP",
-    order: 103,
-    title: "AGM.Controls.quickHP",
-    icon: "fa-solid fa-heart-pulse",
-    button: true,
-    onChange: () => QuickHPApp.open()
-  };
-  tokens.tools.agmEncounter = {
-    name: "agmEncounter",
-    order: 104,
-    title: "AGM.Controls.encounter",
-    icon: "fa-solid fa-dragon",
-    button: true,
-    onChange: () => EncounterSpawnerApp.open()
-  };
-  tokens.tools.agmLoot = {
-    name: "agmLoot",
-    order: 105,
-    title: "AGM.Controls.loot",
-    icon: "fa-solid fa-sack-dollar",
-    button: true,
-    onChange: () => LootDividerApp.open()
   };
 });
 

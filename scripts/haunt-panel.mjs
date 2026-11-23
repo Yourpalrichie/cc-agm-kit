@@ -14,7 +14,8 @@ export class HauntPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       toggleEnabled: HauntPanel.#onToggleEnabled,
       configure: HauntPanel.#onHaunt,
-      haunt: HauntPanel.#onHaunt
+      haunt: HauntPanel.#onHaunt,
+      newHaunt: () => game.modules.get(MODULE_ID).api.openNewHaunt()
     }
   };
 

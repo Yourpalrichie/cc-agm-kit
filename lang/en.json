@@ -4,11 +4,13 @@
     "Settings": {
       "enabled": {
         "name": "Hauntomatic enabled",
-        "hint": "When off, no haunt behaviors trigger. Also toggled from the token scene controls."
+        "hint": "When off, no haunt behaviors trigger. Also toggled from the Carrion Crown scene controls."
       }
     },
     "Controls": {
+      "group": "Carrion Crown",
       "toggle": "Hauntomatic on/off",
+      "newHaunt": "New haunt (stat block, then draw its area)",
       "panel": "Haunt list",
       "sanity": "Sanity tracker",
       "quickHP": "Quick HP & conditions (Shift+H)",
