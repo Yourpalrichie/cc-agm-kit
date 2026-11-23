@@ -1,5 +1,6 @@
 // Quick HP & conditions: apply called-out damage, healing and PF1 conditions to the selected tokens from one window.
 import { MODULE_ID } from "./util.mjs";
+import { getApplyDamageClass } from "./apply-damage.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -14,6 +15,8 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
       condition: QuickHPApp.#onCondition,
       removeCondition: QuickHPApp.#onRemoveCondition,
       toggleTarget: QuickHPApp.#onToggleTarget,
+      toggleType: QuickHPApp.#onToggleType,
+      clearTypes: QuickHPApp.#onClearTypes,
       undo: QuickHPApp.#onUndo
     }
   };
@@ -39,6 +42,8 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
   #excluded = new Set();
   /** Amount typed, kept across re-renders. */
   #amount = "";
+  /** Damage type ids picked (empty = untyped). Cleared after each apply, like the amount. */
+  #types = new Set();
   /** Last HP change, for Undo: [{uuid, name, hp}] */
   #undo = null;
 
@@ -75,7 +80,27 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
         state: !targets.length || n === 0 ? "" : n === targets.length ? "on" : "some"
       };
     }).sort((a, b) => a.name.localeCompare(b.name));
-    return { rows, conds, amount: this.#amount, hasTargets: targets.length > 0, undo: this.#undo };
+    return {
+      rows, conds, amount: this.#amount, hasTargets: targets.length > 0, undo: this.#undo,
+      typeGroups: this.#typeGroups(), typeLabel: this.#typeLabel()
+    };
+  }
+
+  /** PF1's damage types (no modifiers, no untyped), grouped physical / energy / misc like PF1's own picker. */
+  #typeGroups() {
+    const order = ["physical", "energy", "misc"];
+    const groups = order.map((key) => ({ key, types: [] }));
+    for ( const dt of pf1.registry.damageTypes ) {
+      if ( dt.isModifier || dt.id === "untyped" ) continue;
+      const g = groups.find((x) => x.key === dt.category) ?? groups[2];
+      g.types.push({ id: dt.id, name: game.i18n.localize(dt.name), icon: dt.icon, img: dt.img, color: dt.color, on: this.#types.has(dt.id) });
+    }
+    return groups.filter((g) => g.types.length);
+  }
+
+  #typeLabel() {
+    if ( !this.#types.size ) return game.i18n.localize("PF1.DamageTypes.untyped.Label");
+    return [...this.#types].map((id) => game.i18n.localize(pf1.registry.damageTypes.get(id)?.name ?? id)).join(" + ");
   }
 
   _onRender(context, options) {
@@ -130,8 +155,21 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   }
 
+  static #onToggleType(event, target) {
+    const id = target.dataset.id;
+    if ( this.#types.has(id) ) this.#types.delete(id);
+    else this.#types.add(id);
+    this.render();
+  }
+
+  static #onClearTypes() {
+    this.#types.clear();
+    this.render();
+  }
+
   static async #onApply(event, target) {
     const mode = target.dataset.mode;
+    const typed = this.#types.size > 0 && ["damage", "half", "nonlethal"].includes(mode);
     const targets = this.targets;
     if ( !targets.length ) return ui.notifications.warn("Quick HP: select one or more tokens first.");
     const amt = await this.#resolveAmount();
@@ -139,7 +177,13 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const undo = targets.map((t) => ({ uuid: t.actor.uuid, name: t.name, hp: foundry.utils.deepClone(t.actor.system.attributes.hp) }));
     let value = amt.total;
-    for ( const t of targets ) {
+    const typeLabel = this.#typeLabel();
+    if ( typed ) {
+      const dealt = mode === "half" ? Math.floor(value / 2) : value;
+      const applied = await this.#applyTyped(targets, dealt, { asNonlethal: mode === "nonlethal", forceDialog: event.shiftKey });
+      if ( !applied ) return; // dialog cancelled: nothing changed
+    }
+    else for ( const t of targets ) {
       const actor = t.actor;
       switch ( mode ) {
         case "damage": await actor.applyDamage(value); break;
@@ -150,10 +194,50 @@ export class QuickHPApp extends HandlebarsApplicationMixin(ApplicationV2) {
       }
     }
     const verb = { damage: "damage", half: "half damage", nonlethal: "nonlethal damage", heal: "healing", temp: "temp HP" }[mode];
-    this.#undo = { label: `${mode === "half" ? Math.floor(value / 2) : value} ${verb} to ${targets.length} token(s)`, entries: undo };
+    const typeText = typed ? `${typeLabel.toLowerCase()} ` : "";
+    this.#undo = { label: `${mode === "half" ? Math.floor(value / 2) : value} ${typeText}${verb} to ${targets.length} token(s)`, entries: undo };
     this.#amount = "";
+    this.#types.clear();
     if ( amt.text !== String(amt.total) ) ui.notifications.info(`Quick HP: rolled ${amt.text}`);
     this.render();
+  }
+
+  /**
+   * Apply typed damage through PF1's own Apply Damage logic, which works out DR, energy resistance and immunity per target.
+   * If nothing on any target changes the damage, it goes straight through. Otherwise PF1's Apply Damage dialog opens,
+   * pre-filled, so the GM can check the reductions before applying (Shift-click always opens it).
+   * @returns {Promise<boolean>} false if the GM cancelled the dialog
+   */
+  async #applyTyped(targets, value, { asNonlethal = false, forceDialog = false } = {}) {
+    const types = [...this.#types];
+    const part = new pf1.models.action.DamagePartModel({ types });
+    part.value = value;
+    const actors = targets.map((t) => t.actor);
+
+    let resolve;
+    const done = new Promise((r) => { resolve = r; });
+    const ApplyDamage = getApplyDamageClass();
+    const app = new ApplyDamage({ value, targets: actors, instances: [part], asNonlethal, resolve });
+
+    // Vulnerability is +50% in PF1; the dialog lists it but leaves the ratio at 1, so preset it.
+    let needsReview = forceDialog;
+    for ( const t of app.targets ) {
+      if ( types.some((id) => t.actor.system.traits?.dv?.standard?.has?.(id)) ) {
+        t.ratio = 1.5;
+        app._refreshTarget(t.uuid);
+      }
+      if ( t.reduction.total > 0 || t.ratio !== 1 || t.dv.length || t.di.length ) needsReview = true;
+    }
+
+    if ( needsReview ) {
+      app.render({ force: true });
+      const result = await done;
+      return !!result;
+    }
+
+    // Nothing reduces or multiplies it: apply directly, still passing the typed instances so PF1 hooks see the types.
+    for ( const t of app.targets ) await t.actor.applyDamage(value, app._getTargetDamageOptions(t));
+    return true;
   }
 
   static async #onUndo() {

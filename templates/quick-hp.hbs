@@ -21,6 +21,17 @@
   <div class="qhp-amount">
     <input type="text" name="amount" value="{{amount}}" placeholder="Amount or dice, e.g. 12 or 2d6+3" autocomplete="off">
   </div>
+  <div class="qhp-types">
+    <a class="qhp-type untyped" data-action="clearTypes" data-tooltip="Untyped (clear types)"><i class="ra ra-uncertainty"></i></a>
+    {{#each typeGroups}}
+    <span class="qhp-type-group" data-category="{{key}}">
+      {{#each types}}
+      <a class="qhp-type{{#if on}} on{{/if}}" data-action="toggleType" data-id="{{id}}" data-tooltip="{{name}}">{{#if icon}}<i class="{{icon}}" style="color: {{color}}"></i>{{else}}<img src="{{img}}" alt="{{name}}">{{/if}}</a>
+      {{/each}}
+    </span>
+    {{/each}}
+  </div>
+  <div class="qhp-type-label">Damage type: <b>{{typeLabel}}</b> <small>(Shift-click Damage to review DR/ER)</small></div>
   <div class="qhp-buttons">
     <button type="button" data-action="apply" data-mode="damage" data-tooltip="Enter"><i class="fa-solid fa-burst"></i> Damage</button>
     <button type="button" data-action="apply" data-mode="half"><i class="fa-solid fa-shield-halved"></i> Half</button>
