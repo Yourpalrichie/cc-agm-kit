@@ -135,10 +135,10 @@ const isPhantom = (actor) =>
   actor.items.some((i) => i.type === "race" && /phantom/i.test(i.name)) ||
   /phantom/i.test(actor.system?.traits?.type ?? "");
 
+/** Only PCs (PF1 "character" actors) are tracked; the GM can untrack one from its settings. */
 export function isTracked(actor) {
-  const t = rawData(actor)?.tracked;
-  if ( t === true || t === false ) return t;
-  return actor.type === "character" || isPhantom(actor);
+  if ( actor?.type !== "character" ) return false;
+  return rawData(actor)?.tracked !== false;
 }
 
 export function stats(actor) {
@@ -710,10 +710,10 @@ async function editSettings(actor) {
 }
 
 async function trackOther() {
-  const others = game.actors.filter((a) => !isTracked(a)).sort((a, b) => a.name.localeCompare(b.name));
-  if ( !others.length ) return ui.notifications.info("Every actor is already tracked.");
+  const others = game.actors.filter((a) => a.type === "character" && !isTracked(a)).sort((a, b) => a.name.localeCompare(b.name));
+  if ( !others.length ) return ui.notifications.info("Every PC is already tracked.");
   const id = await safe(() => DialogV2.prompt({
-    window: { title: "Track Another Actor" },
+    window: { title: "Track an Untracked PC" },
     content: `<select name="id" style="width:100%">${others.map((a) => `<option value="${a.id}">${esc(a.name)} (${a.type})</option>`).join("")}</select>`,
     ok: { label: "Track", callback: (ev, btn) => btn.form.elements.id.value }
   }));
@@ -832,7 +832,7 @@ export class SanityTrackerApp extends ApplicationV2 {
         <span><a href="${RULES.sanity}" target="_blank">Sanity rules</a> · <a href="${RULES.madness}" target="_blank">Madness</a> · <a href="${RULES.recovery}" target="_blank">Recovery</a></span>
         <label><input type="checkbox" data-action="whisper" ${whisperOn() ? "checked" : ""}> Whisper results to GM</label>
         <span><button type="button" data-action="resync" data-tooltip="Rebuild madness buffs on every tracked actor"><i class="fa-solid fa-rotate"></i> Sync buffs</button>
-        <button type="button" data-action="track"><i class="fa-solid fa-user-plus"></i> Track actor</button></span>
+        <button type="button" data-action="track"><i class="fa-solid fa-user-plus"></i> Track PC</button></span>
       </div>
       <div class="st-clock">
         <i class="fa-solid fa-clock"></i> <b>${esc(fmtDate())}</b>
