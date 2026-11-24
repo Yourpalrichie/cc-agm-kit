@@ -30,3 +30,8 @@ The sanity tracker uses short summaries of the Horror Adventures sanity and madn
 links to the full text on Archives of Nethys. It doesn't include Paizo's rules text or any
 adventure text. You'll need your own copy of the adventure path for stat blocks; paste them into
 **New haunt**.
+
+## License
+
+The code is released under the [MIT License](LICENSE). Pathfinder rules and Carrion Crown
+belong to Paizo Inc. and aren't covered by this license.
