@@ -2,10 +2,10 @@
   "id": "cc-agm-kit",
   "title": "Carrion Crown Assistant GM Kit",
   "description": "Assistant GM tools for a PF1 Carrion Crown game. Hauntomatic, sanity tracker, quick HP and conditions, encounter spawner, loot divider, party actor with group rolls and deploy/recall.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "url": "https://github.com/Yourpalrichie/cc-agm-kit",
   "manifest": "https://github.com/Yourpalrichie/cc-agm-kit/releases/latest/download/module.json",
-  "download": "https://github.com/Yourpalrichie/cc-agm-kit/releases/download/v0.3.0/module.zip",
+  "download": "https://github.com/Yourpalrichie/cc-agm-kit/releases/download/v0.4.0/module.zip",
   "compatibility": {
     "minimum": "13",
     "verified": "13.351",
