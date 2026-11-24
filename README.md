@@ -10,7 +10,10 @@ Requires Foundry VTT v13 (verified on 13.351) and the PF1 system 11.11 or later.
 
 Create an actor of type **Party** in the Actors sidebar and drag PCs, NPC allies or a whole folder onto its sheet.
 
-- The sheet lists each member's HP, AC, saves, Perception and speed, plus overland travel speed from the slowest member.
+- The sheet lists each member's HP, current sanity, AC, saves, Perception and speed, plus overland travel speed from
+  the slowest member.
+- **Rest** (GM/AGM): runs PF1's own rest for the members you pick (HP, spells, daily uses, optional long-term care and
+  world-time advance) and posts one summary card. Sanity recovery stays in the sanity tracker.
 - **Group roll** (GM/AGM): pick a skill, save or ability check and an optional DC. Everyone rolls and one chat card
   shows each result, highest and lowest, and pass/fail. It follows the chat roll mode, so blind GM rolls work.
 - **Move as one token**: drag the party onto a map. **Deploy** (sheet or token HUD) places each member's token around

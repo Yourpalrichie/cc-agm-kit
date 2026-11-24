@@ -12,6 +12,11 @@
         {{/if}}
       </div>
     </div>
+    {{#if isGM}}
+    <button type="button" class="ap-rest" data-action="rest" {{#unless members.length}}disabled{{/unless}} data-tooltip="Rest the party (PF1 rest: HP, spells, daily uses)">
+      <i class="fa-solid fa-bed"></i> Rest
+    </button>
+    {{/if}}
   </header>
 
   <section class="ap-members">
@@ -20,7 +25,7 @@
       <thead>
         <tr>
           {{#if isGM}}<th data-tooltip="Include in group rolls"><i class="fa-solid fa-dice-d20"></i></th>{{/if}}
-          <th></th><th class="ap-name">Member</th><th>HP</th><th>AC</th><th>Fort</th><th>Ref</th><th>Will</th><th>Perc</th><th>Speed</th>
+          <th></th><th class="ap-name">Member</th><th>HP</th><th data-tooltip="Current sanity / sanity score">San</th><th>AC</th><th>Fort</th><th>Ref</th><th>Will</th><th>Perc</th><th>Speed</th>
           {{#if isGM}}<th></th>{{/if}}
         </tr>
       </thead>
@@ -33,6 +38,7 @@
           <td><img src="{{img}}" alt="" {{#if canOpen}}data-action="openMember" data-tooltip="Open sheet"{{/if}}></td>
           <td class="ap-name">{{#if canOpen}}<a data-action="openMember">{{name}}</a>{{else}}{{name}}{{/if}}</td>
           <td>{{hp.value}}/{{hp.max}}</td>
+          <td>{{#if sanity}}<span class="ap-san {{sanity.cls}}" data-tooltip="{{sanity.status}} (edge {{sanity.edge}})">{{sanity.value}}/{{sanity.max}}</span>{{else}}<span class="ap-san" data-tooltip="Mindless">—</span>{{/if}}</td>
           <td>{{ac}}</td>
           <td>{{numberFormat fort sign=true}}</td>
           <td>{{numberFormat ref sign=true}}</td>

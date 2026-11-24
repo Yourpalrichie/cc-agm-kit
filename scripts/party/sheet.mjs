@@ -3,6 +3,16 @@ import { MODULE_ID } from "../util.mjs";
 import { PARTY_TYPE, overland, partyToken, deployedTokens, isParty } from "./data.mjs";
 import { rollChoices, groupRoll } from "./roll.mjs";
 import { deployParty, recallParty } from "./deploy.mjs";
+import { restPartyDialog } from "./rest.mjs";
+import { stats as sanityStats } from "../sanity/tracker.mjs";
+
+/** Current sanity (score minus sanity damage) for the member table, or null for mindless creatures. */
+function sanityOf(actor) {
+  const s = sanityStats(actor);
+  if ( s.mindless ) return null;
+  const cls = { "Stable": "ok", "Strained": "warn", "Past Edge": "bad", "Insane": "insane" }[s.status] ?? "ok";
+  return { value: Math.max(0, s.score - s.d.damage), max: s.score, status: s.status, cls, edge: s.edge };
+}
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -20,7 +30,8 @@ export class PartySheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       toggleRoll: PartySheet.#onToggleRoll,
       groupRoll: PartySheet.#onGroupRoll,
       deploy: PartySheet.#onDeploy,
-      recall: PartySheet.#onRecall
+      recall: PartySheet.#onRecall,
+      rest: PartySheet.#onRest
     }
   };
 
@@ -48,6 +59,7 @@ export class PartySheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         name: a.name,
         img: a.img,
         hp: s.attributes?.hp ?? {},
+        sanity: sanityOf(a),
         ac: s.attributes?.ac?.normal?.total,
         fort: saves.fort?.total, ref: saves.ref?.total, will: saves.will?.total,
         per: s.skills?.per?.mod,
@@ -168,6 +180,10 @@ export class PartySheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #onRecall() {
     await recallParty(this.actor);
+  }
+
+  static async #onRest() {
+    await restPartyDialog(this.actor);
   }
 }
 

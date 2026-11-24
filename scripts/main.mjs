@@ -12,6 +12,7 @@ import { PARTY_TYPE, PartyData, allParties, onPreCreateActor } from "./party/dat
 import { PartySheet, refreshPartySheets } from "./party/sheet.mjs";
 import { groupRoll, rollChoices } from "./party/roll.mjs";
 import { deployParty, recallParty, onRenderTokenHUD } from "./party/deploy.mjs";
+import { restParty, restPartyDialog } from "./party/rest.mjs";
 
 Hooks.once("init", () => {
   CONFIG.RegionBehavior.dataModels[HAUNT_TYPE] = HauntBehaviorType;
@@ -74,7 +75,7 @@ Hooks.once("init", () => {
     loot: { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit },
     sanity: { SanityTrackerApp, syncBuffs, stats, getData },
     openSnapshotImport, snapshots: { importSnapshot, listSnapshots },
-    party: { PARTY_TYPE, allParties, groupRoll, rollChoices, deployParty, recallParty }
+    party: { PARTY_TYPE, allParties, groupRoll, rollChoices, deployParty, recallParty, restParty, restPartyDialog }
   };
 });
 

@@ -244,3 +244,12 @@
 .agm-party-roll .apr-nat20{background:#2a8a3a}.agm-party-roll .apr-nat1{background:#b03a2e}
 .agm-party-roll .apr-pass{font-size:.8em;padding:0 5px;border-radius:8px;color:#fff;min-width:3em;text-align:center}
 .agm-party-roll .apr-pass.yes{background:#3a7d44}.agm-party-roll .apr-pass.no{background:#8a3a3a}
+.agm-party .ap-head .ap-rest{width:auto;flex:none;align-self:flex-start;white-space:nowrap}
+.agm-party .ap-san{white-space:nowrap}
+.agm-party .ap-san.warn{color:#b8860b;font-weight:bold}
+.agm-party .ap-san.bad{color:#c0392b;font-weight:bold}
+.agm-party .ap-san.insane{color:#8e44ad;font-weight:bold}
+.agm-party-rest{display:flex;flex-direction:column;gap:4px}
+.agm-party-rest h4{margin:6px 0 2px;border-bottom:1px solid rgba(127,127,127,.4)}
+.agm-party-rest label.checkbox{display:flex;align-items:center;gap:6px}
+.agm-party-rest small,.agm-party-rest .hint{opacity:.7}
