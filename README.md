@@ -2,9 +2,20 @@
 
 Assistant GM tools for a Pathfinder 1e Carrion Crown game in Foundry VTT:
 Hauntomatic (haunt regions, notice checks and haunt cards), a Horror Adventures sanity tracker,
-quick HP and conditions, an encounter spawner and a loot divider.
+quick HP and conditions, an encounter spawner, a loot divider and a Party actor.
 
 Requires Foundry VTT v13 (verified on 13.351) and the PF1 system 11.11 or later.
+
+## Party actor
+
+Create an actor of type **Party** in the Actors sidebar and drag PCs, NPC allies or a whole folder onto its sheet.
+
+- The sheet lists each member's HP, AC, saves, Perception and speed, plus overland travel speed from the slowest member.
+- **Group roll** (GM/AGM): pick a skill, save or ability check and an optional DC. Everyone rolls and one chat card
+  shows each result, highest and lowest, and pass/fail. It follows the chat roll mode, so blind GM rolls work.
+- **Move as one token**: drag the party onto a map. **Deploy** (sheet or token HUD) places each member's token around
+  it and hides the party token; **Recall** removes those tokens and brings the party token back where the group is.
+  Tokens already on the map are left alone. Players own the party by default so they can move its token.
 
 ## Install (GM)
 

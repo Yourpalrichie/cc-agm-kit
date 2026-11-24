@@ -1,0 +1,94 @@
+<div class="ap-root">
+  <header class="ap-head">
+    <img src="{{party.img}}" alt="" {{#if editable}}data-action="editImage" data-edit="img" data-tooltip="Change image"{{/if}}>
+    <div class="ap-title">
+      <input type="text" name="name" value="{{party.name}}" {{#unless editable}}disabled{{/unless}}>
+      <div class="ap-travel">
+        {{#if travel}}
+        <i class="fa-solid fa-route"></i> Travel at {{travel.speed}} ft: <strong>{{travel.mph}} mph</strong>, <strong>{{travel.perDay}} miles/day</strong>
+        <small>(slowest: {{travel.slowest}})</small>
+        {{else}}
+        <i class="fa-solid fa-route"></i> Add members to see travel speed.
+        {{/if}}
+      </div>
+    </div>
+  </header>
+
+  <section class="ap-members">
+    {{#if members.length}}
+    <table>
+      <thead>
+        <tr>
+          {{#if isGM}}<th data-tooltip="Include in group rolls"><i class="fa-solid fa-dice-d20"></i></th>{{/if}}
+          <th></th><th class="ap-name">Member</th><th>HP</th><th>AC</th><th>Fort</th><th>Ref</th><th>Will</th><th>Perc</th><th>Speed</th>
+          {{#if isGM}}<th></th>{{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each members}}
+        <tr data-member-id="{{id}}" class="{{#unless rolls}}ap-sitting-out{{/unless}}">
+          {{#if @root.isGM}}
+          <td><input type="checkbox" data-action="toggleRoll" {{#if rolls}}checked{{/if}}></td>
+          {{/if}}
+          <td><img src="{{img}}" alt="" {{#if canOpen}}data-action="openMember" data-tooltip="Open sheet"{{/if}}></td>
+          <td class="ap-name">{{#if canOpen}}<a data-action="openMember">{{name}}</a>{{else}}{{name}}{{/if}}</td>
+          <td>{{hp.value}}/{{hp.max}}</td>
+          <td>{{ac}}</td>
+          <td>{{numberFormat fort sign=true}}</td>
+          <td>{{numberFormat ref sign=true}}</td>
+          <td>{{numberFormat will sign=true}}</td>
+          <td>{{numberFormat per sign=true}}</td>
+          <td>{{speed}}</td>
+          {{#if @root.isGM}}
+          <td class="ap-ctl">
+            <a data-action="moveMember" data-dir="-1" data-tooltip="Move up" {{#if first}}class="disabled"{{/if}}><i class="fa-solid fa-chevron-up"></i></a>
+            <a data-action="moveMember" data-dir="1" data-tooltip="Move down" {{#if last}}class="disabled"{{/if}}><i class="fa-solid fa-chevron-down"></i></a>
+            <a data-action="removeMember" data-tooltip="Remove from party"><i class="fa-solid fa-user-minus"></i></a>
+          </td>
+          {{/if}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}
+    <p class="ap-empty">{{#if isGM}}Drag PCs, NPC allies or a whole folder from the Actors sidebar onto this sheet.{{else}}No members yet.{{/if}}</p>
+    {{/if}}
+    {{#if missing}}<p class="ap-empty">{{missing}} member(s) were deleted from the world and are hidden.</p>{{/if}}
+  </section>
+
+  {{#if isGM}}
+  <section class="ap-roll">
+    <h4><i class="fa-solid fa-dice-d20"></i> Group roll</h4>
+    <div class="ap-row">
+      <select name="rollKey">
+        {{#each choices}}
+        <optgroup label="{{group}}">
+          {{#each options}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+        </optgroup>
+        {{/each}}
+      </select>
+      <label>DC <input type="number" name="rollDC" value="{{dc}}" placeholder="none"></label>
+      <button type="button" data-action="groupRoll" {{#unless rollCount}}disabled{{/unless}}>
+        Roll for {{rollCount}}
+      </button>
+    </div>
+    <p class="ap-hint">Uses the chat roll mode (pick "Private GM Roll" or "Blind GM Roll" in chat for secret checks).</p>
+  </section>
+
+  <section class="ap-map">
+    <h4><i class="fa-solid fa-map-location-dot"></i> On the map</h4>
+    {{#if token}}
+    <div class="ap-row">
+      <span>Party token on <strong>{{token.scene}}</strong>{{#if token.out}}, {{token.out}} member token(s) deployed{{/if}}.</span>
+      {{#if token.out}}
+      <button type="button" data-action="recall"><i class="fa-solid fa-people-arrows"></i> Recall</button>
+      {{else}}
+      <button type="button" data-action="deploy" {{#unless members.length}}disabled{{/unless}}><i class="fa-solid fa-people-group"></i> Deploy</button>
+      {{/if}}
+    </div>
+    {{else}}
+    <p class="ap-hint">No party token on the scene you're viewing. Drag this party from the Actors sidebar onto the map to move the group as one token.</p>
+    {{/if}}
+  </section>
+  {{/if}}
+</div>

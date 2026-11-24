@@ -16,7 +16,8 @@
       "quickHP": "Quick HP & conditions (Shift+H)",
       "encounter": "Encounter spawner",
       "loot": "Loot divider",
-      "snapshots": "Import party snapshots"
+      "snapshots": "Import party snapshots",
+      "party": "Open party sheet"
     },
     "State": {
       "armed": "Armed",
@@ -92,6 +93,11 @@
           }
         }
       }
+    }
+  },
+  "TYPES": {
+    "Actor": {
+      "cc-agm-kit.party": "Party"
     }
   }
 }

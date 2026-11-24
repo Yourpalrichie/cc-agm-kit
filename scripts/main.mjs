@@ -8,11 +8,22 @@ import { EncounterSpawnerApp, spawnEncounter } from "./encounter-spawner.mjs";
 import { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit } from "./loot-divider.mjs";
 import { openSnapshotImport, importSnapshot, listSnapshots } from "./snapshot-import.mjs";
 import { SanityTrackerApp, syncBuffs, stats, getData, checkOnsets } from "./sanity/tracker.mjs";
+import { PARTY_TYPE, PartyData, allParties, onPreCreateActor } from "./party/data.mjs";
+import { PartySheet, refreshPartySheets } from "./party/sheet.mjs";
+import { groupRoll, rollChoices } from "./party/roll.mjs";
+import { deployParty, recallParty, onRenderTokenHUD } from "./party/deploy.mjs";
 
 Hooks.once("init", () => {
   CONFIG.RegionBehavior.dataModels[HAUNT_TYPE] = HauntBehaviorType;
   CONFIG.RegionBehavior.typeLabels[HAUNT_TYPE] = "AGM.Haunt";
   CONFIG.RegionBehavior.typeIcons[HAUNT_TYPE] = "fa-solid fa-ghost";
+
+  CONFIG.Actor.dataModels[PARTY_TYPE] = PartyData;
+  CONFIG.Actor.typeIcons ??= {};
+  CONFIG.Actor.typeIcons[PARTY_TYPE] = "fa-solid fa-people-group";
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, MODULE_ID, PartySheet, {
+    types: [PARTY_TYPE], makeDefault: true, label: "Party sheet"
+  });
 
   game.settings.register(MODULE_ID, "hauntomaticEnabled", {
     name: "AGM.Settings.enabled.name",
@@ -62,7 +73,8 @@ Hooks.once("init", () => {
     openLootDivider: () => LootDividerApp.open(),
     loot: { LootDividerApp, getStash, ensureStash, roomLoot, sweepTokens, unmarkLooted, computeSplit },
     sanity: { SanityTrackerApp, syncBuffs, stats, getData },
-    openSnapshotImport, snapshots: { importSnapshot, listSnapshots }
+    openSnapshotImport, snapshots: { importSnapshot, listSnapshots },
+    party: { PARTY_TYPE, allParties, groupRoll, rollChoices, deployParty, recallParty }
   };
 });
 
@@ -146,6 +158,18 @@ Hooks.on("getSceneControlButtons", controls => {
         button: true,
         onChange: () => LootDividerApp.open()
       },
+      agmParty: {
+        name: "agmParty",
+        order: 10,
+        title: "AGM.Controls.party",
+        icon: "fa-solid fa-people-group",
+        button: true,
+        onChange: () => {
+          const parties = allParties();
+          if ( parties.length ) parties[0].sheet.render(true);
+          else ui.notifications.info("No party yet. Create an actor of type Party in the Actors sidebar.");
+        }
+      },
       agmSnapshots: {
         name: "agmSnapshots",
         order: 9,
@@ -159,6 +183,14 @@ Hooks.on("getSceneControlButtons", controls => {
 });
 
 Hooks.on("renderChatMessageHTML", onRenderChatMessageHTML);
+
+/* Party actor */
+Hooks.on("preCreateActor", onPreCreateActor);
+Hooks.on("renderTokenHUD", onRenderTokenHUD);
+Hooks.on("updateActor", (actor) => refreshPartySheets(actor.id));
+for ( const hook of ["createToken", "updateToken", "deleteToken", "canvasReady"] ) {
+  Hooks.on(hook, () => refreshPartySheets());
+}
 
 /* Keep the panel current. */
 for ( const hook of ["createRegionBehavior", "updateRegionBehavior", "deleteRegionBehavior", "deleteRegion", "canvasReady"] ) {

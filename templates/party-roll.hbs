@@ -1,0 +1,26 @@
+<div class="agm-party-roll">
+  <header><i class="fa-solid fa-people-group"></i> <strong>{{party}}</strong>: {{label}}{{#if dc}} <span class="agm-tag">DC {{dc}}</span>{{/if}}</header>
+  {{#if summary}}<div class="apr-summary">{{summary}}</div>{{/if}}
+  <ul>
+    {{#each rows}}
+    <li class="{{#if high}}high{{/if}} {{#if low}}low{{/if}}">
+      <img src="{{img}}" alt="">
+      <span class="apr-name">{{name}}</span>
+      {{#if cannot}}
+      <span class="apr-note">can't (trained only)</span>
+      {{else if error}}
+      <span class="apr-note">roll failed</span>
+      {{else}}
+      <span class="apr-tags">
+        {{#if nat20}}<span class="apr-nat20" data-tooltip="Natural 20">20</span>{{/if}}
+        {{#if nat1}}<span class="apr-nat1" data-tooltip="Natural 1">1</span>{{/if}}
+        {{#if high}}<i class="fa-solid fa-arrow-up" data-tooltip="Highest"></i>{{/if}}
+        {{#if low}}<i class="fa-solid fa-arrow-down" data-tooltip="Lowest"></i>{{/if}}
+      </span>
+      <span class="apr-total" data-tooltip="{{formula}}">{{total}}</span>
+      {{#if @root.dc}}<span class="apr-pass {{#if pass}}yes{{else}}no{{/if}}">{{#if pass}}pass{{else}}fail{{/if}}</span>{{/if}}
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+</div>
